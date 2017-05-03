@@ -12,6 +12,13 @@
 <script>
 export default {
   name: 'test',
+  created : function() {
+    this.$http.get('/api/test2')
+      .then( (res) => {
+        this.msg = res.data
+      })
+  },
+
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',

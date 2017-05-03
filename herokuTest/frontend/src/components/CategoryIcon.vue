@@ -1,7 +1,7 @@
 <template>
     <div v-bind:class="{'categories-wrap':icon, 'categories-text':!icon}">
         <div class="categories">
-            <dl><dt>카테고리</dt>
+            <dl><dt>카테고리 : </dt>
             <dd><ul class="menus">
                 <li class="chicken">치킨 |</li>
                 <li class="chinese">중국집 |</li>
@@ -42,11 +42,11 @@ export default {
 
 
 <style>
-.categories-text .categories{width:900px; margin:0 auto;}
-.categories-text .categories dl dt{float: left;}
+.categories-text .categories{width:626px;margin:0 auto;font-size:13px;}
+.categories-text .categories dl dt{float:left;width:75px;height:40px;font-weight:bold; text-align:center;line-height:20px;}
 .categories-text .categories dl dd{}
 .categories-text .categories dl:after{content:""; display: block; clear: both;}
-.categories-text .categories .menus li{float:left;}
+.categories-text .categories .menus li{float:left;padding-right:2px;line-height:20px;}
 
 
 

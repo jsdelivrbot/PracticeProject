@@ -13,10 +13,15 @@ export default new Router({
       name: 'Main',
       component: Main
     },
+    // {
+    //   path: '/test',
+    //   name: 'Test',
+    //   component: Test
+    // },
     {
-      path: '/test',
+      path: '/test2',
       name: 'Test',
       component: Test
-    }
+    },
   ]
 })

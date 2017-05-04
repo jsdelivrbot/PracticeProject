@@ -13,19 +13,22 @@
 
         <div class="search">
             <div class="location">
-                <span class="location-search">서울 송파구 석촌동</span>
-                <span class="location-search-btn"><i class="fa fa-crosshairs"></i></span>
-                <div class="gudong">
-                    <p>현재 설정된 주소가 맞지 않으세요?<br/> 동명을 검색해서 다시 설정해 주세요.</p>
-                    <input id="gudong-search" type="text" placeholder="동명을 입력하세요" v-model="gudong" v-on:keyup="check">
-                </div>
-                <div class="gudong result">
-                    <ul>
-                        <li>관련된 동이름을 찾을수가 없습니다.</li>
-                    </ul>
-                </div>
-                <div class="gudong">
-                    <button>현재위치 자동검색</button>
+                <span class="location-search">{{gudongSelection.si}} {{gudongSelection.gu}} {{gudongSelection.dong}}</span>
+                <span class="location-search-btn" v-on:click="showGudong"><i class="fa fa-crosshairs"></i></span>
+                <div class="location-gudong" v-bind:class="{ none:gudongHide}">
+                    <div class="gudong line">
+                        <p>현재 설정된 주소가 맞지 않으세요?<br/> 동명을 검색해서 다시 설정해 주세요.</p>
+                        <!-- 한글이 1글자씩 인식이 안되는 문제 때문에 v-model 사용하지 않음 -->
+                        <input id="gudong-search" type="text" placeholder="동명을 입력하세요"v-on:keyup="enterGudong">
+                    </div>
+                    <div class="result">
+                        <ul>
+                            <li class="gudong"v-on:click="selectGudong(one.gu, one.dong)"  v-for="one in gudongResult">{{one.gu}} {{one.dong}}</li>
+                        </ul>
+                    </div>
+                    <div class="gudong current">
+                        <button>현재위치 자동검색</button>
+                    </div>
                 </div>
 
 
@@ -36,7 +39,6 @@
             </div>
         </div>
     </section>
-    <button v-on:click="searchGudong">확인용</button>
 </div>
 
 </template>
@@ -50,22 +52,37 @@ export default {
     props : ['headerComp'],
     data : function(){
         return {
-            gudong : "test",
+            
+            gudong : "",
+            gudongHide : true,
+            gudongSelection : {"si":"서울시", "gu":"송파구", "dong" : "석촌동" },
             gudongResult : ""
         };
     },
     methods : {
-        // 제대로 입력되는지를 확인.
-        check : function(){
+        showGudong : function() {
+            this.gudongHide = !this.gudongHide;
+        },
+        enterGudong : function(){
+            this.gudong = document.getElementById("gudong-search").value;
             console.log("vue data ==>" + this.gudong);
-            console.log("not Vue data => "+document.getElementById("gudong-search").value);
+            if( this.gudong.trim().length === 0) {
+                this.gudongResult = "";
+            } else {
+                this.searchGudong();
+            }
         },
         searchGudong : function() {
             this.$http.get(`/api/gudong/${this.gudong}`)
                 .then( res => {
-                    this.gudongResult = res.data
+                    this.gudongResult = +res.data.length === 0? [{"gu" : "관련된 동이름을","dong" : "찾을수가 없습니다."}] : res.data;
                     console.log(this.gudongResult);
             });
+        },
+        selectGudong : function(gu, dong) {
+            this.gudongSelection["gu"] = gu;
+            this.gudongSelection["dong"] = dong;
+            this.showGudong();
         }
     },
 }
@@ -104,16 +121,23 @@ table {border-collapse:collapse;border-spacing: 0;}
 .header .top ul em{margin:0px 10px;color:#aeaeae}
 .header .top ul:after{display:block;clear:both;content:"";}
 
+.none{display:none}
+
 .header .search{margin:25px auto 0px;padding:0px 192px;}
 .header .search .location{float:left;width:205px;height:39px;border:1px solid #9B9D9F;background-color:#fff;text-align:right;box-sizing:border-box;}
-.header .search .location-search{display:inline-block;width:75%;height:39px;box-sizing:border-box;line-height:39px;text-align:left;font-size:13px;font-weight:bold;}
-.header .search .location-search-btn{display:inline-block;width:39px;height:38px;background-color:#9B9D9F;text-align:center;}
-.header .search .gudong{width:250px;margin:-2px -46px;padding:15px;background-color:#fff;border:1px solid #9B9D9F;font-size:12px;text-align:left;}
-.header .search .gudong p{line-height:20px;}
-.header .search .gudong input{margin-top:10px;width:218px;padding:10px;border:3px solid #A9A9A9;}
-.header .search .gudong input:focus{border:3px solid black;}
-.header .search .gudong.result{font-weight:bold;}
-.header .search .gudong.current{background-color:#eee;border-style:none;}
+.header .search .location-search{display:inline-block;width:75%;height:39px;box-sizing:border-box;line-height:39px;text-align:center;font-size:13px;font-weight:bold;}
+.header .search .location-search-btn{display:inline-block;width:39px;height:38px;background-color:#9B9D9F;text-align:center;cursor:pointer;}
+.header .search .location-gudong{margin-top:-3px;margin-left:-47px;width:251px;border:1px solid #9B9D9F;overflow:hidden;}
+.header .search .location-gudong .gudong{width:250px;padding:15px;background-color:#fff;font-size:12px;text-align:left;}
+.header .search .location-gudong .gudong.line{border-bottom: 1px solid #9B9D9F;margin-bottom: -1px;}
+.header .search .location-gudong .gudong p{line-height:20px;}
+.header .search .location-gudong .gudong input{margin-top:10px;width:218px;padding:10px;border:3px solid #A9A9A9;}
+.header .search .location-gudong .gudong input:focus{border:3px solid black;}
+.header .search .location-gudong .gudong.current{border-top:1px solid #9B9D9F;}
+.header .search .location-gudong .result{max-height:300px;overflow-y:auto;overflow-x:hidden; background-color:#fff;font-weight:bold;}
+.header .search .location-gudong .result ul li{padding:18.6px 15px;border-top:1px solid #9B9D9F;}
+.header .search .location-gudong .result ul li:hover{background:#f4f2ee}
+.header .search .location-gudong .result ul li:last-child{}
 
 .header .search .fa-crosshairs{line-height:39px;font-size:20px;color:#fff}
 .header .search .shop{float:left;width:400px;height:39px;margin-left:10px;}

@@ -6,8 +6,8 @@
             <h1><a href="">배달의 민족</a></h1>
             <ul>
                 <li><a href="">로그인</a><em>|</em></li>
-                <li><a href="">회원가입</a><em>|</em></li>
-                <li><a href="">고객센터</a></li>
+                <li><a href="/#/signup">회원가입</a><em>|</em></li>
+                <li><a href="/#/customer">고객센터</a></li>
             </ul>
         </div>
 
@@ -48,11 +48,10 @@
 <script>
 
 export default {
-    name : 'headerComp',
-    props : ['headerComp'],
+    name : 'commonHeader',
+    props : ['commonHeader'],
     data : function(){
         return {
-            
             gudong : "",
             gudongHide : true,
             gudongSelection : {"si":"서울시", "gu":"송파구", "dong" : "석촌동" },
@@ -65,18 +64,15 @@ export default {
         },
         enterGudong : function(){
             this.gudong = document.getElementById("gudong-search").value;
-            console.log("vue data ==>" + this.gudong);
             if( this.gudong.trim().length === 0) {
-                this.gudongResult = "";
-            } else {
-                this.searchGudong();
+                this.gudongResult = ""; return;
             }
+            this.searchGudong();
         },
         searchGudong : function() {
             this.$http.get(`/api/gudong/${this.gudong}`)
                 .then( res => {
                     this.gudongResult = +res.data.length === 0? [{"gu" : "관련된 동이름을","dong" : "찾을수가 없습니다."}] : res.data;
-                    console.log(this.gudongResult);
             });
         },
         selectGudong : function(gu, dong) {
@@ -105,7 +101,7 @@ table {border-collapse:collapse;border-spacing: 0;}
 /* Header 관련 CSS */
 
 * {text-decoration : none; box-sizing:border-box;}
-.content, .footer{max-width: 960px; margin:0px auto;}
+.footer{max-width: 960px; margin:0px auto;}
 
 
 .header{position:relative;}
@@ -127,7 +123,7 @@ table {border-collapse:collapse;border-spacing: 0;}
 .header .search .location{float:left;width:205px;height:39px;border:1px solid #9B9D9F;background-color:#fff;text-align:right;box-sizing:border-box;}
 .header .search .location-search{display:inline-block;width:75%;height:39px;box-sizing:border-box;line-height:39px;text-align:center;font-size:13px;font-weight:bold;}
 .header .search .location-search-btn{display:inline-block;width:39px;height:38px;background-color:#9B9D9F;text-align:center;cursor:pointer;}
-.header .search .location-gudong{margin-top:-3px;margin-left:-47px;width:251px;border:1px solid #9B9D9F;overflow:hidden;}
+.header .search .location-gudong{position:absolute;margin-top:-3px;margin-left:-47px;width:251px;border:1px solid #9B9D9F;overflow:hidden;z-index:1000;}
 .header .search .location-gudong .gudong{width:250px;padding:15px;background-color:#fff;font-size:12px;text-align:left;}
 .header .search .location-gudong .gudong.line{border-bottom: 1px solid #9B9D9F;margin-bottom: -1px;}
 .header .search .location-gudong .gudong p{line-height:20px;}

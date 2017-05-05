@@ -1,3 +1,5 @@
+from hangul_utils import split_syllables
+
 file_name = "entrc_seoul.txt"
 file = open(file_name, "r", encoding="utf-8" )
 data = file.read()

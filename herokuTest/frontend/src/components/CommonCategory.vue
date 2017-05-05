@@ -1,21 +1,21 @@
 <template>
-    <div v-bind:class="{'categories-wrap':icon, 'categories-text':!icon}">
+    <div v-bind:class="{'categories-text':isMain, 'categories-wrap':!isMain}">
         <div class="categories">
             <dl><dt>카테고리 : </dt>
             <dd><ul class="menus">
-                <li class="chicken">치킨 |</li>
-                <li class="chinese">중국집 |</li>
-                <li class="pizza">피자 |</li>
-                <li class="korea">한식,분식 |</li>
-                <li class="jokbal">족발,보쌈 |</li>
-                <li class="night">야식 |</li>
-                <li class="japanese">돈까스,회,일식 |</li>
-                <li class="tang">찜,탕 |</li>
-                <li class="boxlunch">도시락 |</li>
-                <li class="fastfood">패스트푸드 |</li>
-                <li class="baro">바로결제 |</li>
-                <li class="etc">기타 |</li>
-                <li class="all">모아보기</li>
+                <li class="chicken"><a href="/#/list/chicken/">치킨 |</a></li>
+                <li class="chinese"><a href="/#/list/chinese/">중국집 |</a></li>
+                <li class="pizza"><a href="/#/list/pizza/">피자 |</a></li>
+                <li class="korea"><a href="/#/list/korea/">한식,분식 |</a></li>
+                <li class="jokbal"><a href="/#/list/jokbal/">족발,보쌈 |</a></li>
+                <li class="night"><a href="/#/list/night/">야식 |</a></li>
+                <li class="japanese"><a href="/#/list/japanese/">돈까스,회,일식 |</a></li>
+                <li class="tang"><a href="/#/list/tang/">찜,탕 |</a></li>
+                <li class="boxlunch"><a href="/#/list/boxlunch/">도시락 |</a></li>
+                <li class="fastfood"><a href="/#/list/fastfood/">패스트푸드 |</a></li>
+                <li class="baro"><a href="/#/list/baro/">바로결제 |</a></li>
+                <li class="etc"><a href="/#/list/etc/">기타 |</a></li>
+                <li class="all"><a href="/#/list/all/">모아보기</a></li>
             </ul></dd></dl>
         </div>
     </div>
@@ -26,15 +26,15 @@
 <script>
 
 export default {
-    name : 'categoryIcon',
-    props : ['categoryIcon'],
+    name : 'commonCategory',
+    props : ['commonCategory'],
     data : function(){
         return {
-            icon : true,
+            isMain : location.hash === "#/",
         };
     },
-    method : {
-
+    methods : {
+        
     }
 }
 

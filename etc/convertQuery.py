@@ -1,3 +1,6 @@
+from hangul_utils import split_syllables
+
+
 file = open("addrDB.txt", "r", encoding="utf-8")
 data = file.read()
 data = data.split("\n")

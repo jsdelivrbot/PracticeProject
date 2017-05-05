@@ -1,30 +1,28 @@
 <template>
 
 <div>
-    <header>
+    <div>
         <commonHeader></commonHeader>
         <commonCategory></commonCategory>
-    </header>
-    <mainContent></mainContent>
+        리스트
+    </div>
 </div>
 
+
 </template>
-
-
+ 
  
 <script>
 import CommonHeader from './CommonHeader'
 import CommonCategory from './CommonCategory'
-import MainContent from './MainContent'
 
 // console.log("====================================");
 // console.log( HeaderComp );
 export default {
-    name : 'main',
+    name : 'list',
     components : {
         CommonHeader,
         CommonCategory,
-        MainContent,
     }
 }
 

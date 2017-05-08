@@ -119,11 +119,11 @@ table {border-collapse:collapse;border-spacing: 0;}
 
 .none{display:none}
 
-.header .search{margin:25px auto 0px;padding:0px 192px;}
-.header .search .location{float:left;width:205px;height:39px;border:1px solid #9B9D9F;background-color:#fff;text-align:right;box-sizing:border-box;}
+.header .search{width:640px;margin:25px auto 0px;}
+.header .search .location{float:left;width:38%;height:39px;border:1px solid #9B9D9F;background-color:#fff;text-align:right;box-sizing:border-box;}
 .header .search .location-search{display:inline-block;width:75%;height:39px;box-sizing:border-box;line-height:39px;text-align:center;font-size:13px;font-weight:bold;}
 .header .search .location-search-btn{display:inline-block;width:39px;height:38px;background-color:#9B9D9F;text-align:center;cursor:pointer;}
-.header .search .location-gudong{position:absolute;margin-top:-3px;margin-left:-47px;width:251px;border:1px solid #9B9D9F;overflow:hidden;z-index:1000;}
+.header .search .location-gudong{position:absolute;margin-top:-3px;margin-left:-9px;border:1px solid #9B9D9F;overflow:hidden;z-index:1000;}
 .header .search .location-gudong .gudong{width:250px;padding:15px;background-color:#fff;font-size:12px;text-align:left;}
 .header .search .location-gudong .gudong.line{border-bottom: 1px solid #9B9D9F;margin-bottom: -1px;}
 .header .search .location-gudong .gudong p{line-height:20px;}
@@ -136,8 +136,8 @@ table {border-collapse:collapse;border-spacing: 0;}
 .header .search .location-gudong .result ul li:last-child{}
 
 .header .search .fa-crosshairs{line-height:39px;font-size:20px;color:#fff}
-.header .search .shop{float:left;width:400px;height:39px;margin-left:10px;}
-.header .search .shop-search{width:360px;height:39px;padding-left:10px;box-sizing:border-box;}
+.header .search .shop{float:left;width:60%;height:39px;margin-left:2%;}
+.header .search .shop-search{width:calc(100% - 39px);height:39px;padding-left:10px;box-sizing:border-box;}
 .header .search .shop-search-btn{display:inline-block;width:39px;height:39px;margin-left:-6px;background-color:#333;text-align:center;}
 .header .search .fa-search{color:#fff;line-height:39px;}
 .header .search:after{display:block;clear:both;content:"";}

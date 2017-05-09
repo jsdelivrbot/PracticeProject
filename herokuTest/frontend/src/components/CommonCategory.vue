@@ -3,18 +3,18 @@
         <div class="categories">
             <dl><dt>카테고리 : </dt>
             <dd><ul class="menus">
-                <li class="chicken"><a href="/#/list/chicken/">치킨 |</a></li>
-                <li class="chinese"><a href="/#/list/chinese/">중국집 |</a></li>
-                <li class="pizza"><a href="/#/list/pizza/">피자 |</a></li>
-                <li class="korea"><a href="/#/list/korea/">한식,분식 |</a></li>
-                <li class="jokbal"><a href="/#/list/jokbal/">족발,보쌈 |</a></li>
-                <li class="night"><a href="/#/list/night/">야식 |</a></li>
-                <li class="japanese"><a href="/#/list/japanese/">돈까스,회,일식 |</a></li>
-                <li class="tang"><a href="/#/list/tang/">찜,탕 |</a></li>
-                <li class="boxlunch"><a href="/#/list/boxlunch/">도시락 |</a></li>
-                <li class="fastfood"><a href="/#/list/fastfood/">패스트푸드 |</a></li>
-                <li class="baro"><a href="/#/list/baro/">바로결제 |</a></li>
-                <li class="etc"><a href="/#/list/etc/">기타 |</a></li>
+                <li class="chicken"><a href="/#/list/chicken/">치킨 <span>|</span></a></li>
+                <li class="chinese"><a href="/#/list/chinese/">중국집 <span>|</span></a></li>
+                <li class="pizza"><a href="/#/list/pizza/">피자 <span>|</span></a></li>
+                <li class="korea"><a href="/#/list/korea/">한식,분식 <span>|</span></a></li>
+                <li class="jokbal"><a href="/#/list/jokbal/">족발,보쌈 <span>|</span></a></li>
+                <li class="night"><a href="/#/list/night/">야식 <span>|</span></a></li>
+                <li class="japanese"><a href="/#/list/japanese/">돈까스,회,일식 <span>|</span></a></li>
+                <li class="tang"><a href="/#/list/tang/">찜,탕 <span>|</span></a></li>
+                <li class="boxlunch"><a href="/#/list/boxlunch/">도시락 <span>|</span></a></li>
+                <li class="fastfood"><a href="/#/list/fastfood/">패스트푸드 <span>|</span></a></li>
+                <li class="baro"><a href="/#/list/baro/">바로결제 <span>|</span></a></li>
+                <li class="etc"><a href="/#/list/etc/">기타 <span>|</span></a></li>
                 <li class="all"><a href="/#/list/all/">모아보기</a></li>
             </ul></dd></dl>
         </div>
@@ -47,8 +47,9 @@ export default {
 .categories-text .categories dl dd{}
 .categories-text .categories dl:after{content:""; display: block; clear: both;}
 .categories-text .categories .menus li{float:left;padding-right:2px;line-height:20px;}
-
-
+.categories-text .categories .menus a{color:black;font-size:0.9em;}
+.categories-text .categories .menus a:hover{text-decoration:none;color:red;}
+.categories-text .categories .menus a span{color:#eee;padding:0px 5px;}
 
 .categories-wrap{background-color:#222;overflow:hidden; height:100px;transition: 0.5s}
 .categories-wrap:hover{height:200px;transition: 0.5s}

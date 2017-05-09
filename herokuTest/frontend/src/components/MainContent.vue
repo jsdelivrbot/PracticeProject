@@ -1,40 +1,80 @@
 <template >
     <div class="content">
         <section class="foodList">
-            <div class="chicken">치킨</div>
-            <div class="chinese">중국집</div>
-            <div class="pizza">피자</div>
-            <div class="korea">한식</div>
-            <div class="large event">이벤트</div>
-            <div class="jokbal">족발</div>
-            <div class="night">야식</div>
-            <div class="japanese">일식</div>
-            <div class="tang">탕</div>
-            <div class="boxlunch">도시락</div>
-            <div class="fastfood">페스트푸드</div>
-            <div class="large game">사다리게임</div>
-            <div class="baro">바로결제</div>
-            <div class="etc">기타</div>
+            <div class="chicken" v-on:mouseenter="enterCover" v-on:mouseleave="leaveCover">
+                <span>치킨</span>
+                <p class="chicken-cover"></p>
+            </div>
+            <div class="chinese" v-on:mouseenter="enterCover" v-on:mouseleave="leaveCover">
+                <span>중국집</span>
+                <p class="chinese-cover"></p>
+            </div>
+            <div class="pizza" v-on:mouseenter="enterCover" v-on:mouseleave="leaveCover">
+                <span>피자</span>
+                <p class="pizza-cover"></p>                
+            </div>
+            <div class="korea" v-on:mouseenter="enterCover" v-on:mouseleave="leaveCover">
+                <span>한식</span>
+                <p class="korea-cover"></p>
+            </div>
+            <div class="large event">
+                <span>이벤트</span>
+            </div>
+            <div class="jokbal" v-on:mouseenter="enterCover" v-on:mouseleave="leaveCover">
+                <span>족발</span>
+                <p class="jokbal-cover"></p>
+            </div>
+            <div class="night" v-on:mouseenter="enterCover" v-on:mouseleave="leaveCover">
+                <span>야식</span>
+                <p class="night-cover"></p>
+            </div>
+            <div class="japanese" v-on:mouseenter="enterCover" v-on:mouseleave="leaveCover">
+                <span>일식</span>
+                <p class="japanese-cover"></p>
+            </div>
+            <div class="tang" v-on:mouseenter="enterCover" v-on:mouseleave="leaveCover">
+                <span>탕</span>
+                <p class="tang-cover"></p>
+            </div>
+            <div class="boxlunch" v-on:mouseenter="enterCover" v-on:mouseleave="leaveCover">
+                <span>도시락</span>
+                <p class="boxlunch-cover"></p>
+            </div>
+            <div class="fastfood" v-on:mouseenter="enterCover" v-on:mouseleave="leaveCover">
+                <span>페스트푸드</span>
+                <p class="fastfood-cover"></p>
+            </div>
+            <div class="large game">
+                <span>사다리게임</span>
+            </div>
+            <div class="baro">
+                <span>바로결제</span>
+            </div>
+            <div class="etc">
+                <span>기타</span>
+            </div>
         </section>
 
         <section class="boards">
             <div class="notice">
                 <div>
                     <h3>공지사항</h3>
-                    <div>
-                        <span><</span>
-                        <span>></span>
+                     <div>
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                        <span class="glyphicon glyphicon-chevron-right"></span>
                     </div>
                 </div>
                 <div>
+                    <h4>{{notice.subject}}</h4>
+                    <p>{{notice.content}}</p>
                 </div>
             </div>
             <div class="introduce">
                 <div>
                     <h3>배달의민족 소개</h3>
-                    <div>
-                        <span><</span>
-                        <span>></span>
+                     <div>
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                        <span class="glyphicon glyphicon-chevron-right"></span>
                     </div>
                 </div>
                 <div>1</div>
@@ -80,11 +120,19 @@
 
 <script>
     export default {
-        created : function(){window.addEventListener('resize', this.checkWindowWidth)},
+        created : function(){
+            window.addEventListener('resize', this.checkWindowWidth);
+            this.getOneNotice();
+        },
         name : 'mainContent',
         props : ['mainContent'],
         data : function() {
             return {
+                notice : {
+                    subject : "", 
+                    content : "",
+                    created : "",
+                },
                 windowWidth : window.innerWidth,
                 campaigns : [
                     {
@@ -145,6 +193,37 @@
         },
 
         methods: {
+            getOneNotice : function() {
+                this.$http.get(`/api/notice/1`)
+                    .then( res => {
+                        this.notice = {
+                            subject : res.data[0].subject,
+                            content : res.data[0].content,
+                            created : res.data[0].created.split("T")[0],
+                        }
+                });
+            },
+
+            enterCover : function(event){
+                var className = event.target.className + "-cover";
+                var cover = document.getElementsByClassName(className)[0];
+                
+                cover.style.left = event.offsetX * 2 -220 + "px";
+                cover.style.top = event.offsetY * 2 -220 + "px";
+                cover.style.display = "block";
+                cover.style.transition = "0.2s linear";
+
+                setTimeout( function(){cover.style.left = "-20px"; cover.style.top="-20px";}, 0)
+            },
+
+            leaveCover : function(event){
+                var className = event.target.className + "-cover";
+                var cover = document.getElementsByClassName(className)[0];
+                cover.style.left = event.offsetX * 2 -220 + "px";
+                cover.style.top = event.offsetY * 2 -220 + "px";
+                setTimeout( function(){cover.style.display="none";}, 200)
+            },
+
             goURL : function( path ) {
                 location.href=path;
             },
@@ -179,7 +258,9 @@
 
 .content{max-width: 960px; margin:50px auto 0px;}
 .content .foodList{position:relative;height:1200px;}
-.content .foodList div{transition:1s;position:absolute;float:left;width:240px;height:240px;padding:20px;background-size:100%;background-repeat:no-repeat;background-size:200px;background-position:center;text-indent:-9999px;box-sizing:border-box}
+.content .foodList div{transition:1s;position:absolute;float:left;width:200px;height:200px;margin:20px;
+                       background-size:100%;background-repeat:no-repeat;background-size:200px;background-position:center;
+                       text-indent:-9999px;box-sizing:border-box;overflow:hidden;border-radius:100px;}
 .content .foodList:after{content:""; display:block; clear:both;}
 
 .content .foodList .chicken{top:0px;left:0px;background-image:url(https://img.woowahan.com/www/main/cate01.png)}
@@ -200,12 +281,26 @@
 .content .foodList .event{top:240px;left:0px;background-image:url(http://file.smartbaedal.com/usr/promtxt/2017/4/28/201412050008_180343.png)}
 .content .foodList .game{top:720px;left:480px;background-image:url(https://img.woowahan.com/www/main/game1.png)}
 
+.content .foodList p{position:absolute;display:none;width:240px;height:240px;background-repeat:no-repeat;background-position:center;}
+.content .foodList .chicken-cover{background-image:url(https://img.woowahan.com/www/main/cate01-over.png);}
+.content .foodList .chinese-cover{background-image:url(https://img.woowahan.com/www/main/cate02-over.png);}
+.content .foodList .pizza-cover{background-image:url(https://img.woowahan.com/www/main/cate03-over.png);}
+.content .foodList .korea-cover{background-image:url(https://img.woowahan.com/www/main/cate04-over.png);}
+.content .foodList .jokbal-cover{background-image:url(https://img.woowahan.com/www/main/cate05-over.png);}
+.content .foodList .night-cover{background-image:url(https://img.woowahan.com/www/main/cate06-over.png);}
+.content .foodList .japanese-cover{background-image:url(https://img.woowahan.com/www/main/cate07-over.png);}
+.content .foodList .tang-cover{background-image:url(https://img.woowahan.com/www/main/cate08-over.png);}
+.content .foodList .boxlunch-cover{background-image:url(https://img.woowahan.com/www/main/cate09-over.png);}
+.content .foodList .fastfood-cover{background-image:url(https://img.woowahan.com/www/main/cate10-over.png);}
+
 .boards{margin-top:70px;background-color:lightyellow;}
-.boards>div{float:left;width:46%;margin:0px 2% 40px 2%;}
+.boards>div{float:left;width:46%;min-height:120px;margin:0px 2% 40px 2%;}
 .boards>div>div>h3{float:left;}
+.boards>div>div>h4{font-weight:bold;}
+.boards>div>div>p{margin-top:12px;font-size:0.8em;color:lightslategray;line-height:initial;height:20px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .boards>div>div>div{text-align:right;}
 .boards>div>div>div>span{margin-left:-6px;padding:3px;border:1px solid #eee;}
-.boards>div>div>div>span:hover{background-color:#eee}
+.boards>div>div>div>span:hover{background-color:#eee;cursor:pointer;}
 .boards>div>div:first-child{padding-bottom:20px;border-bottom:2px solid black;font-weight:bold;}
 .boards>div>div:last-child{padding-top:20px;border-top:2px solid black;}
 

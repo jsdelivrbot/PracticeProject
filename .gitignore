@@ -2,3 +2,4 @@
 /.idea
 *_seoul.txt
 nodeTest
+node_modules/

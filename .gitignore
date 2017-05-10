@@ -3,3 +3,5 @@
 *_seoul.txt
 nodeTest
 node_modules/
+**/**/**/node_modules/
+.gitignore

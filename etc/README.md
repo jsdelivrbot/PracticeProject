@@ -1,2 +1,4 @@
-# PracticeProject
-연습 프로젝트
+# etc
+
+- 기타 사항들을 처리하기 위한 폴더
+- https://www.data.go.kr/ 여기에서 원하는 데이터를 받아서 파이썬으로 쿼리 파일 생성

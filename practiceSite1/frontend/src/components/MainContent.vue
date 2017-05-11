@@ -119,9 +119,11 @@
 </template>
 
 <script>
+import EventHub from './EventHub'
+
     export default {
         created : function(){
-            window.addEventListener('resize', this.checkWindowWidth);
+            // window.addEventListener('resize', this.checkWindowWidth);
             this.getOneNotice();
         },
         name : 'mainContent',
@@ -228,7 +230,8 @@
                 location.href=path;
             },
             checkWindowWidth : function() {
-                console.log(window.innerWidth);
+                this.windowWidth = window.innerWidth;
+                console.log(this.windowWidth);
             },
             imageSlide : function( direction, target ) {
                 if( this.campaignCheck !== 0) return;
@@ -313,7 +316,7 @@
 .boards .slide>ul>li>div img{width:80%;}
 
 @media (max-width:960px) {
-    .content{width:720px;height:1680px;background-color:#eee;}
+    .content{width:720px;height:1680px;}
     .content .foodList{height:1680px;}
 
     .content .foodList .korea{top:240px;left:0px}
@@ -331,7 +334,7 @@
 }
 
 @media (max-width:740px) {
-    .content{width:480px;height:2400px;;background-color:#eee;}
+    .content{width:480px;height:2400px;}
     .content .foodList{height:2400px;}
 
     .content .foodList .pizza{top:240px;left:0px}
@@ -347,6 +350,9 @@
 
     .content .foodList .event{top:720px;left:0px}
     .content .foodList .game{top:1680px;left:0px}
+    
+
+
 }
 
 

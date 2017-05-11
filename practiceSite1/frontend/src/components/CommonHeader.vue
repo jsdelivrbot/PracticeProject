@@ -3,7 +3,7 @@
 <div class="header">
     <section class="top-area">
         <div class="top">
-            <h1><a href="">배달의 민족</a></h1>
+            <h1><i class="glyphicon glyphicon-th-large" v-on:click="menutoggle"></i><a href="">배달의 민족</a></h1>
             <ul>
                 <li><a href="">로그인</a><em>|</em></li>
                 <li><a href="/#/signup">회원가입</a><em>|</em></li>
@@ -46,6 +46,7 @@
 
 
 <script>
+import EventHub from './EventHub'
 
 export default {
     name : 'commonHeader',
@@ -55,13 +56,21 @@ export default {
             gudong : "",
             gudongHide : true,
             gudongSelection : {"si":"서울시", "gu":"송파구", "dong" : "석촌동" },
-            gudongResult : ""
+            gudongResult : "",
+            toggle : {"menu":false, "login": false}
         };
     },
     methods : {
+        // 모바일 사이즈일 경우 카테고리를 숨겨놨다가 열어주는데 CommonCategory 컴포넌트에 메세지 보내줘야 함.
+        menutoggle : function() {
+            alert('test');
+            EventHub.$emit('menu-toggle', this.toggle );
+        },
+        // 동네 검색 영역 보여줌
         showGudong : function() {
             this.gudongHide = !this.gudongHide;
         },
+        // 동네 검색시에 입력 값을 data > gudong에 입력해줌. v-model을 쓰면 한글이 한글자씩 인식이 안되어 이렇게 처리.
         enterGudong : function(){
             this.gudong = document.getElementById("gudong-search").value;
             if( this.gudong.trim().length === 0) {
@@ -69,12 +78,14 @@ export default {
             }
             this.searchGudong();
         },
+        // 동네 검색 비동기 처리 메소드
         searchGudong : function() {
             this.$http.get(`/api/gudong/${this.gudong}`)
                 .then( res => {
-                    this.gudongResult = +res.data.length === 0? [{"gu" : "관련된 동이름을","dong" : "찾을수가 없습니다."}] : res.data;
+                    this.gudongResult = +res.data.length === 0 ? [{"gu" : "관련된 동이름을","dong" : "찾을수가 없습니다."}] : res.data;
             });
         },
+        // 동네 검색 결과 클릭시에 data -> gudongSelection 에 결과 데이터를 입력한다.
         selectGudong : function(gu, dong) {
             this.gudongSelection["gu"] = gu;
             this.gudongSelection["dong"] = dong;
@@ -108,6 +119,7 @@ table {border-collapse:collapse;border-spacing: 0;}
 .header .top-area{ max-width:1000px; margin:25px auto 15px; position:relative;}
 .header h1{height:75px;text-align:center;}
 .header h1 a{display:inline-block; height:75px; width:250px;background-image:url("https://img.woowahan.com/www/common/logo-bm-v2@2.png");background-repeat: no-repeat; background-size:100%;text-indent: -9999px; text-align: left;}
+.header h1 i{display:none;}
 
 .header .top{}
 .header .top ul{position:absolute;top:0;right:0;}
@@ -127,6 +139,7 @@ table {border-collapse:collapse;border-spacing: 0;}
 .header .search .location-gudong .gudong{width:250px;padding:15px;background-color:#fff;font-size:12px;text-align:left;}
 .header .search .location-gudong .gudong.line{border-bottom: 1px solid #9B9D9F;margin-bottom: -1px;}
 .header .search .location-gudong .gudong p{line-height:20px;}
+.header .search .location-gudong .gudong button{width:100%;padding:10px;background-color:#fff;border:1px solid #A9A9A9;}
 .header .search .location-gudong .gudong input{margin-top:10px;width:218px;padding:10px;border:3px solid #A9A9A9;}
 .header .search .location-gudong .gudong input:focus{border:3px solid black;}
 .header .search .location-gudong .gudong.current{border-top:1px solid #9B9D9F;}
@@ -143,4 +156,21 @@ table {border-collapse:collapse;border-spacing: 0;}
 .header .search:after{display:block;clear:both;content:"";}
 
 
+@media (max-width:740px) {
+.header .top{margin-top:39px;}
+.header h1{height:60px;}
+.header h1 a{height:100%;background-size:100px;background-position:center;background-image:url(https://img.woowahan.com/www/common/logo-bm-v2.png)}
+.header h1 i{display:inline;font-size:25px;line-height:57px;position: absolute;left:10px;cursor:pointer;}
+.header .top-area{ width:100%; margin:0; position:relative;}
+.header .search{position:absolute;width:100%;margin:0;top:0px;}
+.header .search .location{float:none;width:100%;margin-top:-39px;background-color:#3f3f3f;}
+.header .search .location .location-search{float:left;width:80%;color:#fff;}
+.header .search .location .location-search-btn{width:20%;background-color:#282522;color:#fff;}
+.header .search .location .location-gudong{width:100%;margin:-3px 0px;}
+.header .search .location .location-gudong .gudong{width:100%;}
+.header .search .location .location-gudong input{width:100%;}
+
+.header .search .shop{position:absolute;float:none;width:100%;padding:0px 10px;margin:0px;top:74px;font-size:0.8em;}
+.header .search .shop input{background-color:#333;border:0;}
+}
 </style>

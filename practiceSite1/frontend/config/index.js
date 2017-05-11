@@ -4,8 +4,10 @@ var path = require('path')
 module.exports = {
   build: {
     env: require('./prod.env'),
-    index: path.resolve(__dirname, '../dist/index.html'),
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    // index: path.resolve(__dirname, '../dist/index.html'), // 개발용
+    // assetsRoot: path.resolve(__dirname, '../dist'),  // 개발용
+    index: path.resolve(__dirname, '../../nodeTest/public/index.html'), // 배포용
+    assetsRoot: path.resolve(__dirname, '../../nodeTest/public'), // 배포용
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     productionSourceMap: true,

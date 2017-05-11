@@ -24,17 +24,35 @@
 
 
 <script>
+import EventHub from './EventHub'
 
 export default {
+
+    mounted : function(){
+        // 이벤트 허브 관련 체크
+        EventHub.$on('menu-toggle', (message)=>console.dir(message) );
+        // resize 이벤트
+        window.addEventListener('resize', this.checkWindowWidth);
+    },
     name : 'commonCategory',
     props : ['commonCategory'],
     data : function(){
         return {
-            isMain : location.hash === "#/",
+            isMain : this.checkWindowWidth(),
+            mobileMenuHide : false,
         };
     },
     methods : {
-        
+        // 윈도우 사이즈 or 메인 페이지일때 보여줄 카테고리 추가
+        checkWindowWidth : function() {
+            if( window.innerWidth <= 740 || location.hash === "#/" ) {
+                this.isMain = true;
+                return true;
+            } else {
+                this.isMain = false;
+                return false;
+            }
+        },
     }
 }
 
@@ -42,6 +60,7 @@ export default {
 
 
 <style>
+.none{display:none}
 .categories-text .categories{width:626px;margin:0 auto;font-size:13px;}
 .categories-text .categories dl dt{float:left;width:75px;height:40px;font-weight:bold; text-align:center;line-height:20px;}
 .categories-text .categories dl dd{}
@@ -90,5 +109,18 @@ export default {
 .categories-wrap .categories .menus .all:hover{background-image:url("https://img.woowahan.com/www/title/tl-cate.jpg?201404281135"); background-position: -112px -500px;}
 
 
+@media (max-width:740px) {
+    .categories-text{width:100%;padding-top:65px;background-color:#000;color:#fff;}
+    .categories-text .categories{width:100%;margin:0;}
+    .categories-text .categories dl dt{float:none;position:absolute;left:-9999px;}
+    .categories-text .categories dl dd li{width:33.3333%;padding:15px;text-align:center;border-top:1px solid #212121;box-sizing:box-sizing;cursor:pointer;}
+    .categories-text .categories dl dd li:hover{background-color:#ff6c00;}
+    .categories-text .categories dl dd li:nth-child(3n-1){border-left:1px solid #212121;border-right:1px solid #212121;}
+    .categories-text .categories dl dd li:nth-child(11), li:nth-child(12){border-bottom:1px solid #212121;}
+    .categories-text .categories dl dd li:last-child{margin-left:1px;border-right:1px solid #212121;}
+    .categories-text .categories .menus a{color:#fff;}
+    .categories-text .categories .menus a:hover{color:#fff;}
+    .categories-text .categories dl dd li span{position:absolute;left:-9999px;}
+}
 
 </style>

@@ -3,7 +3,7 @@
 <div class="header">
     <section class="top-area">
         <div class="top">
-            <h1><i class="glyphicon glyphicon-th-large" v-on:click="menutoggle"></i><a href="">배달의 민족</a></h1>
+            <h1><i class="glyphicon glyphicon-th-large" v-on:click="menuShowToggle('menu')"></i><a href="">배달의 민족</a></h1>
             <ul>
                 <li><a href="">로그인</a><em>|</em></li>
                 <li><a href="/#/signup">회원가입</a><em>|</em></li>
@@ -33,7 +33,7 @@
 
 
             </div>
-            <div class="shop">
+            <div class="shop" v-bind:class="{none : !toggle.menu}">
                 <input class="shop-search" type="text" placeholder="업소명을 검색해 주세요">
                 <span class="shop-search-btn" onclick="javascript:alert('test');"><i class="fa fa-search"></i></span>
             </div>
@@ -49,6 +49,12 @@
 import EventHub from './EventHub'
 
 export default {
+     mounted : function(){
+        // resize 이벤트
+        window.addEventListener('resize', ()=>{
+            this.allToggle(window.innerWidth > 740);
+        });
+    },
     name : 'commonHeader',
     props : ['commonHeader'],
     data : function(){
@@ -57,14 +63,28 @@ export default {
             gudongHide : true,
             gudongSelection : {"si":"서울시", "gu":"송파구", "dong" : "석촌동" },
             gudongResult : "",
-            toggle : {"menu":false, "login": false}
+            toggle : {"menu":!this.checkWindowWidth(), "login": false}
         };
     },
     methods : {
+        checkWindowWidth : function() {
+            return window.innerWidth <= 740;
+        },
+
+        allToggle : function(bool) {
+            for( var one in this.toggle ) {
+                console.log(bool);
+                this.toggle[one] = bool;
+            }
+        },
+        
         // 모바일 사이즈일 경우 카테고리를 숨겨놨다가 열어주는데 CommonCategory 컴포넌트에 메세지 보내줘야 함.
-        menutoggle : function() {
-            alert('test');
-            EventHub.$emit('menu-toggle', this.toggle );
+        menuShowToggle : function(selection) {
+            for ( var one in this.toggle ) {
+                if( one === selection ) { this.toggle[one] = !this.toggle[selection]}
+                else{this.toggle[one] = false;}
+            }
+            EventHub.$emit('menushow-toggle', this.toggle.menu );
         },
         // 동네 검색 영역 보여줌
         showGudong : function() {

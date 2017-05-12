@@ -1,5 +1,5 @@
 <template>
-    <div v-bind:class="{'categories-text':isMain, 'categories-wrap':!isMain}">
+    <div v-bind:class="{'categories-text':isMain, 'categories-wrap':!isMain, 'none':notmenu}" >
         <div class="categories">
             <dl><dt>카테고리 : </dt>
             <dd><ul class="menus">
@@ -30,28 +30,32 @@ export default {
 
     mounted : function(){
         // 이벤트 허브 관련 체크
-        EventHub.$on('menu-toggle', (message)=>console.dir(message) );
+        EventHub.$on('menushow-toggle', (message)=>{this.notmenu = !message;} );
         // resize 이벤트
-        window.addEventListener('resize', this.checkWindowWidth);
+        window.addEventListener('resize', ()=>{
+            this.isMain = this.checkCategoryText();
+            this.notmenu = this.checkWindowWidth();
+        });
     },
     name : 'commonCategory',
     props : ['commonCategory'],
     data : function(){
         return {
-            isMain : this.checkWindowWidth(),
+            isMain : this.checkCategoryText(),   // 사이즈 무관 메인페이지 또는 740 이하 전영역 일때 true 이어야 한다.
             mobileMenuHide : false,
+            notmenu : this.checkWindowWidth(),     // 740 이하일때에는 true 740 이상일때는 false이어야 한다.
         };
     },
     methods : {
         // 윈도우 사이즈 or 메인 페이지일때 보여줄 카테고리 추가
+        checkCategoryText : function( ) {
+            return ( this.checkMainPath || this.checkWindowWidth)? true: false;
+        },
         checkWindowWidth : function() {
-            if( window.innerWidth <= 740 || location.hash === "#/" ) {
-                this.isMain = true;
-                return true;
-            } else {
-                this.isMain = false;
-                return false;
-            }
+            return window.innerWidth <= 740;
+        },
+        checkMainPath : function() {
+            return location.hash === "#/";
         },
     }
 }

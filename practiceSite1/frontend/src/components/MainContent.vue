@@ -123,7 +123,8 @@ import EventHub from './EventHub'
 
     export default {
         created : function(){
-            // window.addEventListener('resize', this.checkWindowWidth);
+            window.addEventListener('load', this.checkWindowWidth);
+            window.addEventListener('resize', this.checkWindowWidth);
             this.getOneNotice();
         },
         name : 'mainContent',
@@ -136,6 +137,8 @@ import EventHub from './EventHub'
                     created : "",
                 },
                 windowWidth : window.innerWidth,
+                foodOne : 220,
+                foodOneCenter : -20,
                 campaigns : [
                     {
                         left:"0%",zIndex:"100",
@@ -210,19 +213,19 @@ import EventHub from './EventHub'
                 var className = event.target.className + "-cover";
                 var cover = document.getElementsByClassName(className)[0];
                 
-                cover.style.left = event.offsetX * 2 -220 + "px";
-                cover.style.top = event.offsetY * 2 -220 + "px";
+                cover.style.left = event.offsetX * 2 -this.foodOne + "px";
+                cover.style.top = event.offsetY * 2 -this.foodOne + "px";
                 cover.style.display = "block";
                 cover.style.transition = "0.2s linear";
-
-                setTimeout( function(){cover.style.left = "-20px"; cover.style.top="-20px";}, 0)
+                var foodOneCenter = this.foodOneCenter;
+                setTimeout( function(){cover.style.left = foodOneCenter+"px"; cover.style.top= foodOneCenter+"px";}, 0)
             },
 
             leaveCover : function(event){
                 var className = event.target.className + "-cover";
                 var cover = document.getElementsByClassName(className)[0];
-                cover.style.left = event.offsetX * 2 -220 + "px";
-                cover.style.top = event.offsetY * 2 -220 + "px";
+                cover.style.left = event.offsetX * 2 -this.foodOne + "px";
+                cover.style.top = event.offsetY * 2 -this.foodOne + "px";
                 setTimeout( function(){cover.style.display="none";}, 200)
             },
 
@@ -230,8 +233,18 @@ import EventHub from './EventHub'
                 location.href=path;
             },
             checkWindowWidth : function() {
-                this.windowWidth = window.innerWidth;
-                console.log(this.windowWidth);
+                if(window.innerWidth < 548) {
+                    if(window.innerWidth <420) {
+                        this.foodOne = 140;
+                        this.foodOneCenter = 0;
+                    } else {
+                        this.foodOne = 160;
+                        this.foodOneCenter = 0;
+                    }
+                } else {
+                    this.foodOne = 220;
+                    this.foodOneCenter = -20;
+                }
             },
             imageSlide : function( direction, target ) {
                 if( this.campaignCheck !== 0) return;
@@ -279,7 +292,7 @@ import EventHub from './EventHub'
 .content .foodList .baro{top:960px;left:0px;background-image:url(https://img.woowahan.com/www/main/baro.png)}
 .content .foodList .etc{top:960px;left:240px;background-image:url(https://img.woowahan.com/www/main/nothing.png)}
 
-.content .foodList .large{float:left;width:480px;height:480px;background-size:440px;}
+.content .foodList .large{float:left;width:440px;height:440px;background-size:440px;}
 
 .content .foodList .event{top:240px;left:0px;background-image:url(http://file.smartbaedal.com/usr/promtxt/2017/4/28/201412050008_180343.png)}
 .content .foodList .game{top:720px;left:480px;background-image:url(https://img.woowahan.com/www/main/game1.png)}
@@ -296,7 +309,7 @@ import EventHub from './EventHub'
 .content .foodList .boxlunch-cover{background-image:url(https://img.woowahan.com/www/main/cate09-over.png);}
 .content .foodList .fastfood-cover{background-image:url(https://img.woowahan.com/www/main/cate10-over.png);}
 
-.boards{margin-top:70px;background-color:lightyellow;}
+.boards{margin-top:70px;}
 .boards>div{float:left;width:46%;min-height:120px;margin:0px 2% 40px 2%;}
 .boards>div>div>h3{float:left;}
 .boards>div>div>h4{font-weight:bold;}
@@ -351,9 +364,59 @@ import EventHub from './EventHub'
     .content .foodList .event{top:720px;left:0px}
     .content .foodList .game{top:1680px;left:0px}
     
-
+    .boards>div{float:none;width:100%;}
 
 }
 
+@media (max-width:548px) {
+    .content{width:100%;height:2000px;}
+    .content .foodList{width:400px;height:2000px;margin:0px auto;}
+    .content .foodList div{width:160px;height:160px;background-size:160px;}
+    .content .foodList .large{width:360px;height:360px;background-size:360px}
+    .content .foodList p{width:160px;height:160px;border-radius:160px;}
 
+    .content .foodList .chicken{}
+    .content .foodList .chinese{left:200px;}
+    .content .foodList .pizza{top:200px;}
+    .content .foodList .korea{top:200px;left:200px;}
+    .content .foodList .jokbal{top:400px;}
+    .content .foodList .night{top:400px;left:200px;}
+    .content .foodList .japanese{top:1000px;}
+    .content .foodList .tang{top:1000px;left:200px;}
+    .content .foodList .boxlunch{top:1200px;}
+    .content .foodList .fastfood{top:1200px;left:200px;}
+    .content .foodList .baro{top:1800px;}
+    .content .foodList .etc{top:1800px;left:200px;}
+    .content .foodList .large{}
+    .content .foodList .event{top:600px;}
+    .content .foodList .game{top:1400px;}
+
+    .boards{margin: 70px 20px 0px}
+}
+
+@media (max-width:420px) {
+    .content{height:1500px;}
+    .content .foodList{width:300px;height:1500px;margin:0px auto;}
+    .content .foodList div{width:130px;height:130px;margin:10px;background-size:130px;}
+    .content .foodList .large{width:280px;height:280px;background-size:280px}
+    .content .foodList p{width:130px;height:130px;border-radius:130px;}
+
+    .content .foodList .chicken{}
+    .content .foodList .chinese{left:150px;}
+    .content .foodList .pizza{top:150px;}
+    .content .foodList .korea{top:150px;left:150px;}
+    .content .foodList .jokbal{top:300px;}
+    .content .foodList .night{top:300px;left:150px;}
+    .content .foodList .japanese{top:750px;}
+    .content .foodList .tang{top:750px;left:150px;}
+    .content .foodList .boxlunch{top:900px;}
+    .content .foodList .fastfood{top:900px;left:150px;}
+    .content .foodList .baro{top:1350px;}
+    .content .foodList .etc{top:1350px;left:150px;}
+    .content .foodList .large{}
+    .content .foodList .event{top:450px;}
+    .content .foodList .game{top:1050px;}
+
+    .boards{margin: 70px 10px 0px}
+}
 </style> 

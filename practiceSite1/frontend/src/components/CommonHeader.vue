@@ -3,8 +3,13 @@
 <div class="header">
     <section class="top-area">
         <div class="top">
-            <h1><i class="glyphicon glyphicon-th-large" v-on:click="menuShowToggle('menu')"></i><a href="">배달의 민족</a></h1>
-            <ul>
+            <h1>
+                <i class="glyphicon glyphicon-th-large" v-on:click="menuShowToggle('menu')"></i>
+                <a href="">배달의 민족</a>
+                <i class="glyphicon glyphicon-option-vertical" v-on:click="menuShowToggle('login')"></i>
+                
+            </h1>
+            <ul v-bind:class="{none : !toggle.login}">
                 <li><a href="">로그인</a><em>|</em></li>
                 <li><a href="/#/signup">회원가입</a><em>|</em></li>
                 <li><a href="/#/customer">고객센터</a></li>
@@ -63,7 +68,7 @@ export default {
             gudongHide : true,
             gudongSelection : {"si":"서울시", "gu":"송파구", "dong" : "석촌동" },
             gudongResult : "",
-            toggle : {"menu":!this.checkWindowWidth(), "login": false}
+            toggle : {"menu":!this.checkWindowWidth(), "login": !this.checkWindowWidth()}
         };
     },
     methods : {
@@ -89,6 +94,7 @@ export default {
         // 동네 검색 영역 보여줌
         showGudong : function() {
             this.gudongHide = !this.gudongHide;
+            this.menuShowToggle();
         },
         // 동네 검색시에 입력 값을 data > gudong에 입력해줌. v-model을 쓰면 한글이 한글자씩 인식이 안되어 이렇게 처리.
         enterGudong : function(){
@@ -177,20 +183,28 @@ table {border-collapse:collapse;border-spacing: 0;}
 
 
 @media (max-width:740px) {
+    
 .header .top{margin-top:39px;}
-.header h1{height:60px;}
+.header h1{height:60px;border-bottom:1px solid #DEDEDE;}
 .header h1 a{height:100%;background-size:100px;background-position:center;background-image:url(https://img.woowahan.com/www/common/logo-bm-v2.png)}
-.header h1 i{display:inline;font-size:25px;line-height:57px;position: absolute;left:10px;cursor:pointer;}
+.header h1 i{display:inline;position:absolute;line-height:57px;font-size:25px;cursor:pointer;}
+.header h1 i:first-child{left:10px;}
+.header h1 i:last-child{right:0px;}
 .header .top-area{ width:100%; margin:0; position:relative;}
+
+.header .top ul{width:100%;text-align:center;position:relative;}
+.header .top ul li{float:none;padding:20px;background-color:#000;}
+.header .top ul li em{display:none;}
+
 .header .search{position:absolute;width:100%;margin:0;top:0px;}
 .header .search .location{float:none;width:100%;margin-top:-39px;background-color:#3f3f3f;}
-.header .search .location .location-search{float:left;width:80%;color:#fff;}
-.header .search .location .location-search-btn{width:20%;background-color:#282522;color:#fff;}
+.header .search .location .location-search{float:left;width:90%;color:#fff;}
+.header .search .location .location-search-btn{width:10%;background-color:#282522;color:#fff;}
 .header .search .location .location-gudong{width:100%;margin:-3px 0px;}
 .header .search .location .location-gudong .gudong{width:100%;}
 .header .search .location .location-gudong input{width:100%;}
 
 .header .search .shop{position:absolute;float:none;width:100%;padding:0px 10px;margin:0px;top:74px;font-size:0.8em;}
-.header .search .shop input{background-color:#333;border:0;}
+.header .search .shop input{background-color:#333;border:0;color:#fff;}
 }
 </style>

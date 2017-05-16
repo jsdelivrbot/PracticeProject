@@ -1,5 +1,6 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
-var path = require('path')
+var path = require('path');
+var targetPort = process.env.PORT || 3000;
 
 module.exports = {
   build: {
@@ -31,7 +32,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api' : {
-        target:'http://localhost:3000/api',
+        target:'http://localhost:'+targetPort+'/api',
         changeOrigin:true,
         pathRewrite: {
           '^/api' : ''

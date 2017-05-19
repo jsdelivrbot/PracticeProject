@@ -9,9 +9,25 @@ var index = require('./routes/index');
 var api = require('./routes/api');
 var users = require('./routes/users');
 
+/* https 세팅 */
+var https = require('https');
+var fs = require('fs');
+
+var options = {
+  key: fs.readFileSync('./sslTest/key.pem'),
+  cert: fs.readFileSync('./sslTest/cert.pem')
+};
+
+var PORT1 = 3000;
+var PORT2 = 443;
+
+
 var app = express();
 
-app.set('port', (process.env.PORT || 3000));
+// app.set('port', (process.env.PORT || PORT1));
+
+
+
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -27,7 +43,15 @@ app.use('/users', users);
 //   response.render('pages/index');
 // });
 
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
+// app.listen(app.get('port'), function() {
+//   console.log('Node app is running on port', app.get('port'));
+// });
+
+http.createServer( app ).listen( PORT1, function() {
+  console.log("Http Server listening on port " + PORT1);
+});
+
+https.createServer( options, app ).listen( PORT2, function() {
+  console.log("Https server listening on port " + PORT2);
 });
 

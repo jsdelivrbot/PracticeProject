@@ -32,7 +32,7 @@
                         </ul>
                     </div>
                     <div class="gudong current">
-                        <button>현재위치 자동검색</button>
+                        <button v-on:click="locationNow">현재위치 자동검색</button>
                     </div>
                 </div>
 
@@ -64,6 +64,7 @@ export default {
     props : ['commonHeader'],
     data : function(){
         return {
+            locationCoord : {'latitude':0, 'longtude':0},
             gudong : "",
             gudongHide : true,
             gudongSelection : {"si":"서울시", "gu":"송파구", "dong" : "석촌동" },
@@ -82,11 +83,64 @@ export default {
                 this.toggle[one] = bool;
             }
         },
-        
+
+        // 현재 위치를 좌표로 가져 온다.
+        locationNow : function() {
+            var that = this;
+            navigator.geolocation.getCurrentPosition( function( pos ) {
+                var latitude = pos.coords.latitude;
+                var longtude = pos.coords.longitude;
+                that.locationCoord['lat'] = parseFloat(latitude);
+                that.locationCoord['lng'] = parseFloat(longtude);
+                console.log(`현재 위치는 ${latitude} , ${longtude}`);
+                that.locationSearch();
+            });
+        },
+
+        // 역으로 해당 좌표의 주소값을 가져온다.
+        locationSearch : function() {
+            var geocoder = new google.maps.Geocoder;
+            var latlng = this.locationCoord;
+            //var latlng = {lat:37.498610, lng:127.028045}; //테스트값
+            var that = this;
+            geocoder.geocode({'location': latlng}, function(results, status) {
+                if (status === 'OK') {
+                    if (results[1]) {
+                        that.locationParsing(results);
+                    } else {
+                        window.alert('No results found');
+                    }
+                } else {
+                window.alert('Geocoder failed due to: ' + status);
+                }
+            });
+
+            
+        },
+
+        // 주소값 중 원하는 부분을 가져와서 저장하고 showGudong을 호출한다.
+        locationParsing : function(locationObject) {
+            var that = this;
+            var cnt = 0;
+            var lastWord = 0;
+            var word = "";
+
+            locationObject.some( x => {
+                x.address_components.forEach( one => {
+                    lastWord = one.long_name.length-1;
+                    word = one.long_name;
+                    if(word[lastWord] === "동") { that.gudongSelection["dong"] = word; cnt++; }
+                    if(word[lastWord] === "구") { that.gudongSelection["gu"] = word; cnt++; }
+                });
+                return cnt === 2;
+            });
+            that.showGudong();
+        },
+
         // 모바일 사이즈일 경우 카테고리를 숨겨놨다가 열어주는데 CommonCategory 컴포넌트에 메세지 보내줘야 함.
         menuShowToggle : function(selection) {
             for ( var one in this.toggle ) {
-                if( one === selection ) { this.toggle[one] = !this.toggle[selection]}
+                if( one === selection ) { this.toggle[one] = !this.toggle[selection] }
                 else{this.toggle[one] = false;}
             }
             EventHub.$emit('menushow-toggle', this.toggle.menu );
@@ -94,7 +148,9 @@ export default {
         // 동네 검색 영역 보여줌
         showGudong : function() {
             this.gudongHide = !this.gudongHide;
-            this.menuShowToggle();
+            if(this.checkWindowWidth()) {
+                this.menuShowToggle();
+            }
         },
         // 동네 검색시에 입력 값을 data > gudong에 입력해줌. v-model을 쓰면 한글이 한글자씩 인식이 안되어 이렇게 처리.
         enterGudong : function(){

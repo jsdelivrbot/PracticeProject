@@ -49,12 +49,13 @@ export default {
     methods : {
         // 윈도우 사이즈 or 메인 페이지일때 보여줄 카테고리 추가
         checkCategoryText : function( ) {
-            return ( this.checkMainPath || this.checkWindowWidth)? true: false;
+            return ( this.checkMainPath() || this.checkWindowWidth() )? true: false;
         },
         checkWindowWidth : function() {
             return window.innerWidth <= 740;
         },
         checkMainPath : function() {
+            console.log(location.hash);
             return location.hash === "#/";
         },
     }

@@ -25,7 +25,9 @@ const scssoptions = {
 
 gulp.task('babel', () => {
   console.log('[run babel]');
-  return gulp.src(dirs.src + '/js/**/*.js')
+  return gulp.src(
+    [dirs.src + '/js/tetris.js',
+    dirs.src + '/js/**/*.js'])
     .pipe(babel())
     .pipe(concat('total.js'))
     .pipe(gulp.dest(dirs.dest))

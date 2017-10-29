@@ -44,11 +44,8 @@ var Tetris = function () {
         value: function init() {
             var _this = this;
 
+            this.addKeyControl();
             requestAnimationFrame(this.loop.bind(this));
-            // 2d 배열을 모두 0으로 초기화함
-            // for(let row=0; row < this.rows; row++) {
-            //     this.board.push(new Array(this.cols).fill(row%2));
-            // }
 
             // board 배열을 정해진 rows * cols 에 맞도록 추기화 하고 그 값으 0으로 채워넣는다.
             var rowsArray = Array(this.rows).fill();
@@ -71,12 +68,12 @@ var Tetris = function () {
                 this.moveBlock(1, 0);
                 this.prevTick = now;
 
-                if (!this.isMovable()) {
+                if (!this.isMovable({ row: 1, col: 0 })) {
                     this.addBlockToBoard();
                     this.makeNewBlock(0, this.cols / 2);
                 }
             }
-
+            this.removeCompleteRow();
             this.render();
             this.requestId = requestAnimationFrame(this.loop.bind(this));
         }
@@ -99,29 +96,51 @@ var Tetris = function () {
     }, {
         key: "moveBlock",
         value: function moveBlock(row, col) {
+            if (!this.isMovable({ row: row, col: col })) {
+                return;
+            }
             this.block.position.row += row;
             this.block.position.col += col;
         }
     }, {
         key: "isMovable",
-        value: function isMovable() {
-            var block = this.block;
-            for (var c = 0; c < block.cols; c++) {
-                console.log(111, block.rows - 1, block.shape[1][c]);
-                // 각 열의 맨 아래 칸을 찾는다.
-                for (var r = block.rows - 1; r >= 0 && block.shape[r][c] === 0; r--) {
-                    var col = block.position.col + c,
-                        row = block.position.row + r;
-                    console.log(c, r, col, row);
-                    if (row >= this.rows - 1 || // 바닥에 닿음
-                    this.board[row + 1][col] > 0) {
-                        // 한칸 아래 다른 블록
-                        console.log("닿았음");
+        value: function isMovable(offset) {
+            var block = this.block,
+                newBlockPosition = {
+                row: block.position.row + offset.row,
+                col: block.position.col + offset.col
+            };
+            var row = void 0,
+                col = void 0,
+                isOverlap = void 0,
+                isOutOfBoundary = void 0;
+
+            // 1. 각 열의 가장 아래 칸만 확인하던 로직을 수정하여 블록의 모든 칸을 확인한다.
+            for (var _row = 0; _row < block.rows; _row++) {
+                for (var _col = 0; _col < block.cols; _col++) {
+                    // 2. 화면에 벗어나는지 확인
+                    isOutOfBoundary = !this.blockIsWithinBoundary(offset);
+                    // 3. 다른 블록과 겹치는지 확인
+                    isOverlap = !isOutOfBoundary && block.shape[_row][_col] > 0 && this.board[newBlockPosition.row + _row][newBlockPosition.col + _col] > 0;
+
+                    // 2 또는 3 둘 중 하나라도 해당하면 false를 반환
+                    if (isOutOfBoundary || isOverlap) {
                         return false;
                     }
                 }
             }
             return true;
+        }
+    }, {
+        key: "blockIsWithinBoundary",
+        value: function blockIsWithinBoundary(offset) {
+            var thisBlock = this.block;
+            var tempPosition = {
+                row: thisBlock.position.row + offset.row,
+                col: thisBlock.position.col + offset.col
+            };
+
+            return tempPosition.row >= 0 && tempPosition.col >= 0 && tempPosition.row + thisBlock.rows <= this.rows && tempPosition.col + thisBlock.cols <= this.cols;
         }
     }, {
         key: "addBlockToBoard",
@@ -131,6 +150,88 @@ var Tetris = function () {
                     if (this.block.shape[row][col] > 0) {
                         this.board[this.block.position.row + row][this.block.position.col + col] = this.block.shape[row][col];
                     }
+                }
+            }
+        }
+    }, {
+        key: "addKeyControl",
+        value: function addKeyControl() {
+            var _this2 = this;
+
+            document.body.addEventListener('keydown', function (e) {
+                var bPosition = _this2.block.position,
+                    rightEnd = _this2.cols - _this2.block.cols;
+
+                switch (e.keyCode) {
+                    case 37:
+                        // left
+                        e.preventDefault();
+                        _this2.moveBlock(0, -1);
+                        break;
+                    case 38:
+                        // up
+                        e.preventDefault();
+                        _this2.rotateBlock();
+                        break;
+                    case 39:
+                        // right
+                        e.preventDefault();
+                        _this2.moveBlock(0, 1);
+                        break;
+                    case 40:
+                        // down
+                        e.preventDefault();
+                        _this2.moveBlock(1, 0);
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+    }, {
+        key: "rotateBlock",
+        value: function rotateBlock() {
+            var newShape = [],
+                oldCols = this.block.cols,
+                oldRows = this.block.rows,
+                oldShape = this.block.shape;
+
+            // 회전 후에는 원래의 가로 * 세로 사이즈가 뒤바뀌기 때문에 새로운 사이즈의 shape 배열을 생성
+            for (var row = 0; row < oldCols; row++) {
+                newShape.push([]);
+            }
+
+            for (var _row2 = 0; _row2 < oldCols; _row2++) {
+                for (var col = 0; col < oldRows; col++) {
+                    // 회전 로직은 새 배열의 row, col 좌표에 원래 배열의 col역순, row 값을 넣는다.
+                    newShape[_row2][col] = this.block.shape[oldRows - 1 - col][_row2];
+                }
+            }
+
+            // 새 shape 배열과 행 수, 열 수를 블록에 저장
+            this.block.shape = newShape;
+            this.block.rows = oldCols;
+            this.block.cols = oldRows;
+
+            // 만약 회전시킨 블록이 화면 밖으로 벗어나거나 다른 블록과 겹치면 원래대로 되돌림
+            if (!this.isMovable({ row: 0, col: 0 })) {
+                this.block.shape = oldShape;
+                this.block.rows = oldRows;
+                this.block.cols = oldCols;
+            }
+        }
+    }, {
+        key: "removeCompleteRow",
+        value: function removeCompleteRow() {
+            for (var row = 0; row < this.rows; row++) {
+                // [].every메소드를 이용해 행의 모든값이 1이상인지 체크
+                if (this.board[row].every(function (v) {
+                    return v > 0;
+                })) {
+                    // 해당하는 행을 삭제
+                    this.board.splice(row, 1);
+                    // 제일 위에 한줄 추가
+                    this.board.splice(0, 0, Array(this.cols).fill(0));
                 }
             }
         }

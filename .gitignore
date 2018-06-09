@@ -4,4 +4,10 @@
 nodeTest
 node_modules/
 **/**/**/node_modules/
-.gitignore
+*.pyc
+testSSE/upload/*
+testSSE/.idea
+testSSE/.vscode
+venv
+__pycache__
+front/build/*

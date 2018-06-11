@@ -20,6 +20,8 @@ class App extends Component {
       <div style={style}>
         <h1 style={styleH1}>File Test</h1>
         <FileItem />
+        <FileItem />
+        <FileItem />
       </div>
     );
   }
